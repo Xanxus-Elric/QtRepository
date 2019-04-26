@@ -9,7 +9,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
-
+#include "addwidget.h"
+#include "editwidget.h"
+#include "findwidget.h"
 
 class Widget : public QWidget
 {
@@ -31,23 +33,11 @@ private:
     QPushButton     *PreButton;
     QPushButton     *NextButton;
 
-    QWidget         *AddWidget;
-    QWidget         *EditWidget;
-    QWidget         *FindWidget;
+    AddWidget       *AddOptForm;
+    EditWidget      *EditOptForm;
+    FindWidget      *FindOptForm;
 
 private slots:
-    void AddHandler();
-    void EditHandler();
-    void RemoveHandler();
-    void FindHandler();
-    void LoadFileHandler();
-    void SaveFileHandler();
-    void PreviousHandler();
-    void NextHandler();
-
-    void AddConfirmHandler();
-    void EditConfirmHandler();
-    void FindComfirmHandler();
 
 };
 
