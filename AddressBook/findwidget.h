@@ -18,6 +18,7 @@ private:
     QPushButton *SearchButton;
 
 public slots:
+
 };
 
 #endif // FINDEDIT_H

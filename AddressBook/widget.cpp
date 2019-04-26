@@ -1,9 +1,13 @@
 #include "widget.h"
 
-//Create the Main Window of this program
+//this is the Mainwindow of this program
+//though this window, we can go to another window
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+    qDebug() << "Enter the Program" << endl;
+
     //set up the UI Page on this Constructor function
     QLabel *NamePrompt = new QLabel("Name", this);
     QLabel *AddressPrompt = new QLabel("Address", this);
@@ -46,23 +50,88 @@ Widget::Widget(QWidget *parent)
     this->AddressText->setReadOnly(true);
 
     this->AddOptForm = new AddWidget;
-    this->AddOptForm->show();
-
     this->EditOptForm = new EditWidget;
-    this->EditOptForm->show();
-
     this->FindOptForm = new FindWidget;
-    this->FindOptForm->show();
 
-//    //connect the signal to the slot
-//    connect(this->AddButton, SIGNAL(clicked(bool)), this, SLOT(AddHandler()));
-//    connect(this->EditButton, SIGNAL(clicked(bool)), this, SLOT(EditHandler()));
+    //connect the signal to the slot function
+    connect(this->AddButton, SIGNAL(clicked(bool)), this, SLOT(Add()));
+    connect(this->AddOptForm, SIGNAL(AddConfirmSignal()), this, SLOT(GetAddInfo()));
+
+    connect(this->EditButton, SIGNAL(clicked(bool)), this, SLOT(Edit()));
+    connect(this->EditOptForm, SIGNAL(EditConfirmSignal()), this, SLOT(GetEditInfo()));
+
+    connect(this->FindButton, SIGNAL(clicked(bool)), this, SLOT(Find()));
+
+
 //    connect(this->RemoveButton, SIGNAL(clicked(bool)), this, SLOT(RemoveHandler()));
-//    connect(this->FindButton, SIGNAL(clicked(bool)), this, SLOT(FindHandler()));
 //    connect(this->LoadFileButton, SIGNAL(clicked(bool)), this, SLOT(LoadFileHandler()));
 //    connect(this->SaveFileButton, SIGNAL(clicked(bool)), this, SLOT(SaveFileHandler()));
 //    connect(this->PreButton, SIGNAL(clicked(bool)), this, SLOT(PreviousHandler()));
 //    connect(this->NextButton, SIGNAL(clicked(bool)), this, SLOT(NextHandler()));
+}
+
+void Widget::GetAddInfo(){
+    QMapIterator<QString, QString> i(this->AddressMap);
+    int MsgRet;
+
+    //if the User Input the Correct information on the Add Dialog
+    //Collect these information
+    this->NameLine->setText(this->AddOptForm->GetName());
+    this->AddressText->setText(this->AddOptForm->GetAddress());
+
+    if (this->AddressMap.contains(this->NameLine->text())){
+        //the Contacter is already existed
+        MsgRet = QMessageBox::warning(this,
+                             "Add Contacter Warning",
+                             "The Contacter is Already existed",
+                             QMessageBox::Reset,
+                             QMessageBox::Cancel);
+
+        if (MsgRet == QMessageBox::Reset){
+            //override it
+            this->AddressMap.insert(this->NameLine->text(),
+                                    this->AddressText->toPlainText());
+        }
+        else{
+            //do nothing
+            return ;
+        }
+    }
+    else{
+        this->AddressMap.insert(this->NameLine->text(),
+                                this->AddressText->toPlainText());
+    }
+}
+
+void Widget::Add(){
+
+    this->AddOptForm->exec();
+}
+
+void Widget::GetEditInfo(){
+    //Get the Information of the Contacter
+    this->NameLine->setText(this->EditOptForm->GetName());
+    this->AddressText->setText(this->EditOptForm->GetAddress());
+}
+
+void Widget::Edit(){
+    if (this->NameLine->text().isEmpty() ||
+            this->AddressText->toPlainText().isEmpty()){
+        QMessageBox::critical(this,
+                              "Edit Contacter Error",
+                              "The Name or Address is Empty, Please Check",
+                              QMessageBox::Ok);
+    }
+    else{
+        this->EditOptForm->SetName(this->NameLine->text());
+        this->EditOptForm->SetAddress(this->AddressText->toPlainText());
+        this->EditOptForm->exec();
+    }
+}
+
+void Widget::Find(){
+
+    this->FindOptForm->show();
 }
 
 Widget::~Widget()

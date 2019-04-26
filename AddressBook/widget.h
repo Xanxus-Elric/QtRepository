@@ -9,9 +9,14 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QMessageBox>
+#include <QMap>
+#include <QMapIterator>
+#include <QDebug>
 #include "addwidget.h"
 #include "editwidget.h"
 #include "findwidget.h"
+
 
 class Widget : public QWidget
 {
@@ -37,7 +42,14 @@ private:
     EditWidget      *EditOptForm;
     FindWidget      *FindOptForm;
 
-private slots:
+    QMap<QString, QString> AddressMap;
+
+private slots:    
+    void Add();
+    void GetAddInfo();
+    void Edit();
+    void GetEditInfo();
+    void Find();
 
 };
 
