@@ -37,6 +37,8 @@ private:
     QPushButton     *DelBtn;
     QPushButton     *ModifyBtn;
     QPushButton     *SearchBtn;
+    QPushButton     *PrevBtn;
+    QPushButton     *NextBtn;
 
     AddDialog       *AddForm;
     ModifyDialog    *ModifyForm;
@@ -56,6 +58,8 @@ private slots:
     void GetModifyInfo();
     void SearchHandle();
     void GetSearchInfo();
+    void PrevHandle();
+    void NextHandle();
 
 public slots:
 };
