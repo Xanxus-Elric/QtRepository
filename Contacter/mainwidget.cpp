@@ -38,9 +38,9 @@ MainWidget::MainWidget(QWidget *parent)
     BtnLayout->addWidget(this->SearchBtn);
 
     QVBoxLayout *InfoLayout = new QVBoxLayout();
-    InfoLayout->addWidget(NamePrompt);    
-    InfoLayout->addWidget(AddressPrompt);
+    InfoLayout->addWidget(NamePrompt);        
     InfoLayout->addWidget(this->NameEdit);
+    InfoLayout->addWidget(AddressPrompt);
     InfoLayout->addWidget(this->AddressEdit);
 
     QHBoxLayout *PNLayout = new QHBoxLayout();
@@ -58,6 +58,9 @@ MainWidget::MainWidget(QWidget *parent)
     this->ModifyForm    = new ModifyDialog(this);
     this->SearchForm    = new SearchDialog(this);
 
+    this->setMaximumSize(400, 300);
+    this->setMinimumSize(400, 300);
+
     //Read the AddressBook.Txt File to Get the Information
     this->LoadFile();
 
@@ -69,6 +72,9 @@ MainWidget::MainWidget(QWidget *parent)
 
     connect(this->ModifyBtn, SIGNAL(clicked(bool)), this, SLOT(ModifyHandle()));
     connect(this->ModifyForm, SIGNAL(ModifyFinishSignal()), this, SLOT(GetModifyInfo()));
+
+    connect(this->SearchBtn, SIGNAL(clicked(bool)), this, SLOT(SearchHandle()));
+    connect(this->SearchForm, SIGNAL(SearchFinishSignal()), this, SLOT(GetSearchInfo()));
 
     connect(this->PrevBtn, SIGNAL(clicked(bool)), this, SLOT(PrevHandle()));
     connect(this->NextBtn, SIGNAL(clicked(bool)), this, SLOT(NextHandle()));
@@ -230,13 +236,11 @@ void MainWidget::DelHandle(){
         }
         else{
             //Check The size of the Map List
-            if (this->InfoMap.empty()){
-                this->NameEdit->clear();
-                this->AddressEdit->clear();
-            }
-            else{
+            if (!this->InfoMap.empty()){
                 MapIter = this->InfoMap;
-                MapIter.next();
+                MapIter.toBack();
+                MapIter.previous();
+                MapIter.previous();
                 this->NameEdit->setText(MapIter.key());
                 this->AddressEdit->setText(MapIter.value());
             }
@@ -256,6 +260,8 @@ void MainWidget::DelHandle(){
         this->DelBtn->setEnabled(false);
         this->ModifyBtn->setEnabled(false);
         this->SearchBtn->setEnabled(false);
+        this->NameEdit->clear();
+        this->AddressEdit->clear();
     }
 }
 
@@ -269,12 +275,21 @@ void MainWidget::ModifyHandle(){
 }
 
 void MainWidget::GetModifyInfo(){
+    QString ModifyKey   = this->NameEdit->text();
+    QString NewKey      = this->ModifyForm->GetName();
+    QString NewValue    = this->ModifyForm->GetAddress();
+
+    qDebug() << "the Modify key is " << ModifyKey;
+
+    //remove the previous member
+    this->InfoMap.remove(ModifyKey);
+
     //Show the contacter's Information after Modification on the MainWidget
-    this->NameEdit->setText(this->ModifyForm->GetName());
-    this->AddressEdit->setText(this->ModifyForm->GetAddress());
+    this->NameEdit->setText(NewKey);
+    this->AddressEdit->setText(NewValue);
 
-    //Add the Contacter's Information after Modification to the QMap
-
+    //Add new member to key
+    this->InfoMap.insert(NewKey, NewValue);
 }
 
 void MainWidget::SearchHandle(){
@@ -284,8 +299,23 @@ void MainWidget::SearchHandle(){
 void MainWidget::GetSearchInfo(){
     //Get the Name Of Contacter which does user want to search
     QString ContactName = this->SearchForm->GetSearchName();
+
     //Find in the QMap
-    //.....
+    if (this->InfoMap.contains(ContactName)){
+        this->NameEdit->setText(ContactName);
+        this->AddressEdit->setText(this->InfoMap.value(ContactName));
+        this->SearchForm->close();
+    }
+    else{
+        int Ret = QMessageBox::information(this,
+                                         "No Contact Found!",
+                                         "You can change Name, and Search again",
+                                         "Try Again", "Cancel");
+
+        if (Ret == 1){
+            this->SearchForm->close();
+        }
+    }
 }
 
 void MainWidget::PrevHandle(){

@@ -12,6 +12,7 @@ SearchDialog::SearchDialog(QWidget *parent) :
     MainLayout->addWidget(this->SearchName);
     MainLayout->addWidget(this->ConfirmBtn);
 
+    connect(this->ConfirmBtn, SIGNAL(clicked(bool)), this, SLOT(SearchConfirmHandle()));
 }
 
 void SearchDialog::SearchConfirmHandle(){
@@ -24,7 +25,7 @@ void SearchDialog::SearchConfirmHandle(){
     else{
         emit SearchFinishSignal();
         this->SearchName->clear();
-        this->close();
+        //this->close();
     }
 }
 
