@@ -13,11 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        dictwidget.cpp
+        dictwidget.cpp \
+    convertwidget.cpp
 
-HEADERS  += dictwidget.h
+HEADERS  += dictwidget.h \
+    convertwidget.h
 
 RESOURCES += \
-    textfile.qrc
+    textfile.qrc \
+    icon.qrc
 
 CONFIG += resources_big

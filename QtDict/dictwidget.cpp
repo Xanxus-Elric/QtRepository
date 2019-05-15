@@ -11,63 +11,17 @@
 #include <QStringList>
 #include <QSqlQuery>
 #include <QProgressDialog>
-
-bool DictWidget::ConvertFileToDb(){
-    //Firstly, judge whether the Database file exists or not
-    this->DictDb = QSqlDatabase::addDatabase("QSQLITE");
-
-    QFile DbFile("./DictDatabase");
-    if (DbFile.exists()){
-        qDebug() << "Db File Exists";
-
-        this->DictDb.setDatabaseName("./DictDatabase");
-
-        if (this->DictDb.open()){
-            qDebug() << "Open Db Success";
-            return true;
-        }
-        else{
-            qDebug() << "Open Db Fail";
-            return false;
-        }
-    }
-    else{
-        qDebug() << "File doesn't Exists";
-        //Need to convert the Txt File to Db File
-        this->DictDb.setDatabaseName("./DictDatabase");
-
-        if (this->DictDb.open()){
-            qDebug() << "Open Db Success";
-
-            QSqlQuery query;
-            query.exec("create table Dict(word varchar(20), definition varchar(500))");
-
-            QFile Dict(":/Text/dict.txt");
-
-            if (!Dict.open(QIODevice::ReadOnly | QIODevice::Text)){
-                qDebug() << "Open File Fail";
-                return false;
-            }
-
-            while(!Dict.atEnd()){
-                QString TempLine = Dict.readLine();
-                QStringList TempList = TempLine.split(":");
-                QString QueryStr = "insert into Dict values('" + TempList.at(0) + "','" + TempList.at(1) + "')";
-                query.exec(QueryStr);
-            }
-
-            return true;
-        }
-        else{
-            qDebug() << "Open Db Fail";
-            return false;
-        }
-    }
-}
+#include <QIcon>
 
 DictWidget::DictWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QIcon DictIcon(":/Icon/DictIcon.png");
+
+    this->setMinimumSize(400, 300);
+    this->setWindowTitle("Dictionary");
+    this->setWindowIcon(DictIcon);
+    //First Part, Setup the UI Page
     this->SearchWord = new QLineEdit(this);
     this->SearchWord->setPlaceholderText("Search Word");
 
@@ -84,15 +38,33 @@ DictWidget::DictWidget(QWidget *parent)
     MainLayout->addLayout(FirstLayout, 0, 0);
     MainLayout->addWidget(this->SearchResult);
 
-    if (!ConvertFileToDb()){
+    //Second Part, Open the Database
+    this->DictDb = QSqlDatabase::addDatabase("QSQLITE");
+    this->DictDb.setDatabaseName("./DictDatabase");
+
+    if (!this->DictDb.open()){
+        qDebug() << "Open Dictionary Database Fail";
         return ;
     }
 
+    //Third Part, Connect Signal-Slot
     connect(this->SearchBtn, SIGNAL(clicked(bool)), this, SLOT(Search()));
 }
 
 void DictWidget::Search(){
+    //Get the text on line Edit
+    QString TempStr = this->SearchWord->text();
+    TempStr = TempStr.toLower();
+    QString QueryStr = "select * from Dict where word = '" + TempStr + "'";
+    QSqlQuery query;
+    query.exec(QueryStr);
 
+    if (query.next()){
+        this->SearchResult->setText(query.value("definition").toString());
+    }
+    else{
+        this->SearchResult->setText("No Result Found");
+    }
 }
 
 DictWidget::~DictWidget()

@@ -24,8 +24,6 @@ private:
     QTextEdit       *SearchResult;
     QSqlDatabase    DictDb;
 
-    bool ConvertFileToDb();
-
 private slots:
     void Search();
 };
