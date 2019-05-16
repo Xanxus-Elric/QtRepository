@@ -43,6 +43,8 @@ void ConvertOpt::ConvertDb(){
             QString     queryStr;
             int CurrentLines = 0;
 
+            DictDb.transaction();
+
             while(!DictFile.atEnd()){
                 TempString = DictFile.readLine();
                 TempList = TempString.split(":");
@@ -51,6 +53,8 @@ void ConvertOpt::ConvertDb(){
                 CurrentLines ++;
                 emit ReportLines(CurrentLines);
             }
+
+            DictDb.commit();
         }
         else{
             qDebug() << "Open Dict File fail";
@@ -60,7 +64,6 @@ void ConvertOpt::ConvertDb(){
         qDebug() << "Open Database fail";
     }
 
-    DictDb.close();
     emit CloseThread();
 }
 
@@ -114,6 +117,7 @@ void MainDictWidget::StartConvertThread(int TotalLines)
 void MainDictWidget::ShowSearchMainAfterConvert()
 {
     this->convertThread->quit();
+    QSqlDatabase::removeDatabase("qt_sql_default_connection");
 
     QMessageBox::information(this, "Setup Database success", "Establish the Dictionary Database Complete, Click \"OK\" to Use");
 
