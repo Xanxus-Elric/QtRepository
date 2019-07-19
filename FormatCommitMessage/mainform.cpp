@@ -15,14 +15,21 @@ MainForm::MainForm(QWidget *parent) :
     this->MainIcon.addFile("./ConvertIcon.ico");
     this->setWindowIcon(this->MainIcon);
 
+<<<<<<< HEAD
     this->ui->NumberEdit->setFocus();
 
+=======
+>>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
     this->ui->CreateLabel->setEnabled(false);
 
     this->ui->tableWidget->setSelectionBehavior ( QAbstractItemView::SelectRows); //设置选择行为，以行为单位
     this->ui->tableWidget->setSelectionMode ( QAbstractItemView::SingleSelection);
 
+<<<<<<< HEAD
     this->ui->DescEdit->setPlaceholderText("Press 'Enter' to Confirm Issue Number and Issue Description!");
+=======
+    this->ui->DescEdit->setPlaceholderText("Press 'Enter' to confirm input");
+>>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
 }
 
 MainForm::~MainForm()
@@ -60,6 +67,7 @@ void MainForm::on_ConvertButton_clicked()
     }
 
     this->ui->FormatMessage->append(Head_Str);
+<<<<<<< HEAD
 
     QString TempStr;
     QString IssueNumber;
@@ -80,6 +88,28 @@ void MainForm::on_ConvertButton_clicked()
             IssueNumber = "";
         }
 
+=======
+
+    QString TempStr;
+    QString IssueNumber;
+    QString IssueDesc;
+    QTableWidgetItem *ColumnFirst;
+    QTableWidgetItem *ColumnSecond;
+
+    for (int LoopFlag = 0; LoopFlag < CurrentRow; LoopFlag++)
+    {
+        TempStr = IssueStr;
+
+        ColumnFirst = this->ui->tableWidget->item(LoopFlag, 0);
+        ColumnSecond = this->ui->tableWidget->item(LoopFlag, 1);
+
+        if (ColumnFirst){
+            IssueNumber = ColumnFirst->text();
+        }else{
+            IssueNumber = "";
+        }
+
+>>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
         if (ColumnSecond){
             IssueDesc = ColumnSecond->text();
         }else{
@@ -130,6 +160,7 @@ void MainForm::on_ConvertButton_clicked()
 }
 
 void MainForm::on_checkBox_stateChanged(int arg1)
+<<<<<<< HEAD
 {
     if (this->ui->checkBox->checkState() == Qt::Checked){
         this->ui->CreateLabel->setEnabled(true);
@@ -160,6 +191,38 @@ void MainForm::on_DescEdit_returnPressed()
 
 void MainForm::on_DeleteButton_clicked()
 {
+=======
+{
+    if (this->ui->checkBox->checkState() == Qt::Checked){
+        this->ui->CreateLabel->setEnabled(true);
+    }
+    else{
+        this->ui->CreateLabel->setEnabled(false);
+    }
+}
+
+
+
+void MainForm::on_DescEdit_returnPressed()
+{
+    int CurrentRowCount = this->ui->tableWidget->rowCount();
+
+    QTableWidgetItem *IssueNumber = new QTableWidgetItem(this->ui->NumberEdit->text());
+    QTableWidgetItem *IssueDesc = new QTableWidgetItem(this->ui->DescEdit->text());
+
+    this->ui->tableWidget->setRowCount(this->ui->tableWidget->rowCount()+1);
+
+    this->ui->tableWidget->setItem(CurrentRowCount, 0, IssueNumber);
+    this->ui->tableWidget->setItem(CurrentRowCount, 1, IssueDesc);
+
+    this->ui->NumberEdit->clear();
+    this->ui->DescEdit->clear();
+    this->ui->NumberEdit->setFocus();
+}
+
+void MainForm::on_DeleteButton_clicked()
+{
+>>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
     int RowIndex = this->ui->tableWidget->currentRow();
 
     if (RowIndex != -1){
