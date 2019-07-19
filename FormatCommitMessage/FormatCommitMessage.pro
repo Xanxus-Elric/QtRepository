@@ -13,11 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainform.cpp \
-    addissueform.cpp
+        mainform.cpp
 
-HEADERS  += mainform.h \
-    addissueform.h
+HEADERS  += mainform.h
 
-FORMS    += mainform.ui \
-    addissueform.ui
+FORMS    += mainform.ui
+
+RC_ICONS = ConvertIcon.ico

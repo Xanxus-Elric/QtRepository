@@ -12,7 +12,15 @@ MainForm::MainForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QObject::connect(&this->Add, SIGNAL(IssueAdd()), this, SLOT(Slot_AddSignal()));
+    this->MainIcon.addFile("./ConvertIcon.ico");
+    this->setWindowIcon(this->MainIcon);
+
+    this->ui->CreateLabel->setEnabled(false);
+
+    this->ui->tableWidget->setSelectionBehavior ( QAbstractItemView::SelectRows); //设置选择行为，以行为单位
+    this->ui->tableWidget->setSelectionMode ( QAbstractItemView::SingleSelection);
+
+    this->ui->DescEdit->setPlaceholderText("Press 'Enter' to confirm input");
 }
 
 MainForm::~MainForm()
@@ -20,88 +28,85 @@ MainForm::~MainForm()
     delete ui;
 }
 
-
-void MainForm::on_AddBtn_clicked()
-{
-    this->Add.show();
-}
-
-void MainForm::Slot_AddSignal()
-{
-    int CurrentRow = this->ui->tableWidget->rowCount();
-    qDebug() << CurrentRow;
-
-    this->ui->tableWidget->setRowCount(CurrentRow + 1);
-
-    QTableWidgetItem *IssueNumberItem = new QTableWidgetItem(this->Add.IssueNumber.trimmed());
-    QTableWidgetItem *IssueDescItem = new QTableWidgetItem(this->Add.IssueDesc.trimmed());
-
-    this->ui->tableWidget->setItem(CurrentRow, 0, IssueNumberItem);
-    this->ui->tableWidget->setItem(CurrentRow, 1, IssueDescItem);
-}
-
 void MainForm::on_ConvertButton_clicked()
 {
-    this->ui->FormatMessage->clear();
-
-    if (this->ui->tableWidget->rowCount() == 0){
-        QMessageBox::critical(this, "Fail", "Issue List is NULL");
-        return ;
-    }
-
-    if (this->ui->PlaceGroup->checkedButton() == 0){
-        QMessageBox::critical(this, "Fail", "No Place Name select");
-        return ;
-    }
-
-    if (this->ui->MemberGroup->checkedButton() == 0){
-        QMessageBox::critical(this, "Fail", "No Member Name select");
-        return ;
-    }
-
-    if (this->ui->LabelMarkerEdit->text() == "")
-    {
-        QMessageBox::critical(this, "Fail", "No Label Marker Add");
-        return ;
-    }
-
     int CurrentRow = this->ui->tableWidget->rowCount();
-    int LoopFlag = 0;
+    bool CreateLabel = true;
+
+    QAbstractButton *PlaceSelect = this->ui->PlaceGroup->checkedButton();
+    QAbstractButton *MemberSelect = this->ui->MemberGroup->checkedButton();
+    QString         LabelString = this->ui->LabelMarkerEdit->text();
 
     QString Head_Str = "**  [M00x]";
     QString IssueStr = "     Issue   : ";
     QString LabelStr = "     Label   : ";
     QString File_Str = "     File    : ";
 
+    this->ui->FormatMessage->clear();
+
+    if (CurrentRow == 0){
+        QMessageBox::critical(this, "Fail", "Issue List is Empty");
+        return ;
+    }
+
+    if (PlaceSelect == 0 || MemberSelect == 0 || LabelString == ""){
+        int Result = QMessageBox::warning(this, "Warning", "Will Not create the Label", QMessageBox::Ok, QMessageBox::Cancel);
+        if (Result == QMessageBox::Cancel){
+            CreateLabel = false;
+            return ;
+        }
+    }
+
     this->ui->FormatMessage->append(Head_Str);
 
-    for (LoopFlag = 0; LoopFlag < CurrentRow; LoopFlag++)
+    QString TempStr;
+    QString IssueNumber;
+    QString IssueDesc;
+    QTableWidgetItem *ColumnFirst;
+    QTableWidgetItem *ColumnSecond;
+
+    for (int LoopFlag = 0; LoopFlag < CurrentRow; LoopFlag++)
     {
-        QString TempStr = IssueStr;
-        QString IssueNumber = this->ui->tableWidget->item(LoopFlag, 0)->text();
-        QString IssueDesc = this->ui->tableWidget->item(LoopFlag, 1)->text();
+        TempStr = IssueStr;
+
+        ColumnFirst = this->ui->tableWidget->item(LoopFlag, 0);
+        ColumnSecond = this->ui->tableWidget->item(LoopFlag, 1);
+
+        if (ColumnFirst){
+            IssueNumber = ColumnFirst->text();
+        }else{
+            IssueNumber = "";
+        }
+
+        if (ColumnSecond){
+            IssueDesc = ColumnSecond->text();
+        }else{
+            IssueDesc = "";
+        }
 
         TempStr += ("EIP:" + IssueNumber + "    " + IssueDesc);
         this->ui->FormatMessage->append(TempStr);
     }
 
-    QRadioButton *Place = qobject_cast<QRadioButton *>(this->ui->PlaceGroup->checkedButton());
-    QRadioButton *Member = qobject_cast<QRadioButton *>(this->ui->MemberGroup->checkedButton());
+    if (CreateLabel){
+        QRadioButton *Place = qobject_cast<QRadioButton *>(PlaceSelect);
+        QRadioButton *Member = qobject_cast<QRadioButton *>(MemberSelect);
 
-    QString PlaceName = Place->objectName();
-    QString MemberName = Member->objectName();
-    QString CurrentTime = QDateTime::currentDateTime().toString("yyyyMMdd");
+        QString PlaceName = Place->objectName();
+        QString MemberName = Member->objectName();
+        QString CurrentTime = QDateTime::currentDateTime().toString("yyyyMMdd");
 
-    if (PlaceName == "User")
-        LabelStr += this->ui->UserDefineEdit->text();
-    else
-        LabelStr += PlaceName;
+        if (PlaceName == "User")
+            LabelStr += this->ui->UserDefineEdit->text();
+        else
+            LabelStr += PlaceName;
 
-    LabelStr += ("_D" + CurrentTime + "_" + MemberName);
+        LabelStr += ("_D" + CurrentTime + "_" + MemberName);
 
-    LabelStr += ("_" + this->ui->LabelMarkerEdit->text());
+        LabelStr += ("_" + this->ui->LabelMarkerEdit->text());
 
-    this->ui->FormatMessage->append(LabelStr);
+        this->ui->FormatMessage->append(LabelStr);
+    }
 
     File_Str += (this->ui->FileDescEdit->text());
 
@@ -109,15 +114,45 @@ void MainForm::on_ConvertButton_clicked()
 
     this->ui->tableWidget->clear();
     this->ui->tableWidget->setRowCount(0);
-    this->ui->PlaceGroup->checkedButton()->setChecked(false);
-    this->ui->MemberGroup->checkedButton()->setChecked(false);
     this->ui->UserDefineEdit->clear();
     this->ui->FileDescEdit->clear();
     this->ui->LabelMarkerEdit->clear();
 }
 
-void MainForm::on_pushButton_clicked()
+void MainForm::on_checkBox_stateChanged(int arg1)
 {
-    int row=this->ui->tableWidget->row(this->ui->tableWidget->selectedItems().at(0));
-    this->ui->tableWidget->removeRow(row);
+    if (this->ui->checkBox->checkState() == Qt::Checked){
+        this->ui->CreateLabel->setEnabled(true);
+    }
+    else{
+        this->ui->CreateLabel->setEnabled(false);
+    }
+}
+
+
+
+void MainForm::on_DescEdit_returnPressed()
+{
+    int CurrentRowCount = this->ui->tableWidget->rowCount();
+
+    QTableWidgetItem *IssueNumber = new QTableWidgetItem(this->ui->NumberEdit->text());
+    QTableWidgetItem *IssueDesc = new QTableWidgetItem(this->ui->DescEdit->text());
+
+    this->ui->tableWidget->setRowCount(this->ui->tableWidget->rowCount()+1);
+
+    this->ui->tableWidget->setItem(CurrentRowCount, 0, IssueNumber);
+    this->ui->tableWidget->setItem(CurrentRowCount, 1, IssueDesc);
+
+    this->ui->NumberEdit->clear();
+    this->ui->DescEdit->clear();
+    this->ui->NumberEdit->setFocus();
+}
+
+void MainForm::on_DeleteButton_clicked()
+{
+    int RowIndex = this->ui->tableWidget->currentRow();
+
+    if (RowIndex != -1){
+        this->ui->tableWidget->removeRow(RowIndex);
+    }
 }
