@@ -6,18 +6,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1083</width>
-    <height>615</height>
+    <width>1220</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Format Commit Message</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2,1,10">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string> EIP Number</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="NumberEdit"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string> Description</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="DescEdit"/>
+         </item>
+        </layout>
+       </item>
        <item>
         <widget class="QTableWidget" name="tableWidget">
          <attribute name="horizontalHeaderStretchLastSection">
@@ -39,7 +75,14 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="DeleteButton">
+           <property name="text">
+            <string>Delete Issue</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
@@ -53,205 +96,207 @@
            </property>
           </spacer>
          </item>
-         <item>
-          <widget class="QPushButton" name="pushButton">
-           <property name="text">
-            <string>Delete Issue</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="AddBtn">
-           <property name="text">
-            <string>Add Issue</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Place Name</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
-           <widget class="QRadioButton" name="CN">
-            <property name="text">
-             <string>CN</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">PlaceGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="TW">
-            <property name="text">
-             <string>TW</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">PlaceGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="LEM">
-            <property name="text">
-             <string>LEM</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">PlaceGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="LNV">
-            <property name="text">
-             <string>LNV</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">PlaceGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="User">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">PlaceGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="UserDefineEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="placeholderText">
-             <string>User Define</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_2">
-       <property name="title">
-        <string>Member Name</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QRadioButton" name="FZ">
-            <property name="text">
-             <string>Fred_FZ</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="LY">
-            <property name="text">
-             <string>Leo_LY</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="WZ">
-            <property name="text">
-             <string>Wesley_WZ</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="RH">
-            <property name="text">
-             <string>Rofa_RH</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="CW">
-            <property name="text">
-             <string>Carl_CW</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="SZ">
-            <property name="text">
-             <string>Stonel_SZ</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="EY">
-            <property name="text">
-             <string>Edward_EY</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">MemberGroup</string>
-            </attribute>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QCheckBox" name="checkBox">
          <property name="text">
-          <string>Label Marker</string>
+          <string>Create Label</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="LabelMarkerEdit"/>
+        <widget class="QGroupBox" name="CreateLabel">
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string>Place Name</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="CN">
+                 <property name="text">
+                  <string>CN</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">PlaceGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QRadioButton" name="TW">
+                 <property name="text">
+                  <string>TW</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">PlaceGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QRadioButton" name="LEM">
+                 <property name="text">
+                  <string>LEM</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">PlaceGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QRadioButton" name="LNV">
+                 <property name="text">
+                  <string>LNV</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">PlaceGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QRadioButton" name="User">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">PlaceGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="5">
+                <widget class="QLineEdit" name="UserDefineEdit">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="placeholderText">
+                  <string>User Define</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="title">
+               <string>Member Name</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="0" column="0">
+                <widget class="QRadioButton" name="FZ">
+                 <property name="text">
+                  <string>Fred_FZ</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QRadioButton" name="LY">
+                 <property name="text">
+                  <string>Leo_LY</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QRadioButton" name="WZ">
+                 <property name="text">
+                  <string>Wesley_WZ</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QRadioButton" name="RH">
+                 <property name="text">
+                  <string>Rofa_RH</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QRadioButton" name="CW">
+                 <property name="text">
+                  <string>Carl_CW</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="5">
+                <widget class="QRadioButton" name="SZ">
+                 <property name="text">
+                  <string>Stonel_SZ</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item row="0" column="6">
+                <widget class="QRadioButton" name="EY">
+                 <property name="text">
+                  <string>Edward_EY</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">MemberGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Label Marker</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="LabelMarkerEdit"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -265,29 +310,33 @@
       </layout>
      </item>
      <item>
-      <widget class="QTextEdit" name="FormatMessage"/>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        <widget class="QTextEdit" name="FormatMessage"/>
        </item>
        <item>
-        <widget class="QPushButton" name="ConvertButton">
-         <property name="text">
-          <string>Convert</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="ConvertButton">
+           <property name="text">
+            <string>Convert</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
@@ -299,7 +348,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="PlaceGroup"/>
   <buttongroup name="MemberGroup"/>
+  <buttongroup name="PlaceGroup"/>
  </buttongroups>
 </ui>

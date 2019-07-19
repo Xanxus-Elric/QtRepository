@@ -2,7 +2,7 @@
 #define MAINFORM_H
 
 #include <QWidget>
-#include "addissueform.h"
+#include <QIcon>
 
 namespace Ui {
 class MainForm;
@@ -18,18 +18,19 @@ public:
 
 private slots:
 
-    void on_AddBtn_clicked();
-    void Slot_AddSignal();
-
     void on_ConvertButton_clicked();
 
+    void on_checkBox_stateChanged(int arg1);
 
-    void on_pushButton_clicked();
+    void on_DescEdit_returnPressed();
+
+    void on_DeleteButton_clicked();
 
 private:
     Ui::MainForm *ui;
 
-    AddIssueForm Add;
+    QIcon MainIcon;
+
 };
 
 #endif // MAINFORM_H
