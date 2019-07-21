@@ -5,6 +5,7 @@
 #include <QTableWidgetItem>
 #include <QMessageBox>
 #include <QDateTime>
+#include <QStringList>
 
 MainForm::MainForm(QWidget *parent) :
     QWidget(parent),
@@ -12,24 +13,19 @@ MainForm::MainForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //Set the Application's Icon
     this->MainIcon.addFile("./ConvertIcon.ico");
     this->setWindowIcon(this->MainIcon);
 
-<<<<<<< HEAD
-    this->ui->NumberEdit->setFocus();
+    //Set some prompt in the line edit
+    this->ui->IssueDescEdit->setPlaceholderText("Press 'TAB' to continue input Issue, Press 'ENTER' to convert commit message!");
+    this->ui->ModuleGroupEdit->setPlaceholderText("'LEM' for 'Lenovo Module'");
+    this->ui->MemberNameEdit->setPlaceholderText("'EY' for 'EdwardYang'");
+    this->ui->LabelMarkerEdit->setPlaceholderText("For Example, '01'");
 
-=======
->>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
-    this->ui->CreateLabel->setEnabled(false);
-
-    this->ui->tableWidget->setSelectionBehavior ( QAbstractItemView::SelectRows); //设置选择行为，以行为单位
-    this->ui->tableWidget->setSelectionMode ( QAbstractItemView::SingleSelection);
-
-<<<<<<< HEAD
-    this->ui->DescEdit->setPlaceholderText("Press 'Enter' to Confirm Issue Number and Issue Description!");
-=======
-    this->ui->DescEdit->setPlaceholderText("Press 'Enter' to confirm input");
->>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
+    //Set configuration of some item
+    this->ui->ModuleGroupEdit->setFocus();
+    this->NoLabel = true;
 }
 
 MainForm::~MainForm()
@@ -37,195 +33,169 @@ MainForm::~MainForm()
     delete ui;
 }
 
-void MainForm::on_ConvertButton_clicked()
+void MainForm::on_IssueNumberEdit_returnPressed()
 {
-    int CurrentRow = this->ui->tableWidget->rowCount();
-    bool CreateLabel = true;
+    this->ui->IssueDescEdit->setFocus();
+}
 
-    QAbstractButton *PlaceSelect = this->ui->PlaceGroup->checkedButton();
-    QAbstractButton *MemberSelect = this->ui->MemberGroup->checkedButton();
-    QString         LabelString = this->ui->LabelMarkerEdit->text();
-
+void MainForm::on_IssueDescEdit_returnPressed()
+{
     QString Head_Str = "**  [M00x]";
-    QString IssueStr = "     Issue   : ";
-    QString LabelStr = "     Label   : ";
-    QString File_Str = "     File    : ";
+    QString IssueStr = "     Issue  : EIP:";
+    QString LabelStr = "     Label  : ";
+    QString File_Str = "     File   : ";
 
-    this->ui->FormatMessage->clear();
+    this->ui->ConvertResultEdit->clear();
 
-    if (CurrentRow == 0){
-        QMessageBox::critical(this, "Fail", "Issue List is Empty");
+    this->ui->ConvertResultEdit->append(Head_Str);
+
+    for (int i = 0; i < this->IssueList.length(); i++){
+        this->ui->ConvertResultEdit->append(this->IssueList.at(i));
+    }
+
+    QString IssueNumber = this->ui->IssueNumberEdit->text().trimmed();
+    QString IssueDesc = this->ui->IssueDescEdit->text().trimmed();
+    QString TempStr = "";
+
+    if (IssueDesc.isEmpty()){
+        QMessageBox::warning(this, "Add Issue Fail!", "The Issue Description is Empty!");
         return ;
     }
 
-    if (PlaceSelect == 0 || MemberSelect == 0 || LabelString == ""){
-        int Result = QMessageBox::warning(this, "Warning", "Will Not create the Label", QMessageBox::Ok, QMessageBox::Cancel);
-        if (Result == QMessageBox::Cancel){
-            CreateLabel = false;
+    if (IssueNumber.isEmpty()){
+        TempStr = (IssueStr + IssueDesc);
+    }
+    else{
+        TempStr = (IssueStr + IssueNumber + "    " + IssueDesc);
+    }
+
+    this->ui->ConvertResultEdit->append(TempStr);
+
+    if (!this->NoLabel){
+        LabelStr += this->ui->ModuleGroupEdit->text().trimmed();
+        LabelStr += ("_D" + QDateTime::currentDateTime().toString("yyyyMMdd") + "_");
+        LabelStr += this->ui->MemberNameEdit->text().trimmed();
+        LabelStr += ("_" + this->ui->LabelMarkerEdit->text().trimmed());
+    }
+
+    this->ui->ConvertResultEdit->append(LabelStr);
+
+    this->ui->ConvertResultEdit->append(File_Str);
+
+    this->ui->ConvertResultEdit->selectAll();
+    this->ui->ConvertResultEdit->copy();
+
+    this->ui->ConvertResultEdit->append("The Commit Message has been copyed to clipboard!\n");
+
+    this->ui->ModuleGroupEdit->setEnabled(true);
+    this->ui->ModuleGroupEdit->clear();
+    this->ui->ModuleGroupEdit->setFocus();
+
+    this->ui->MemberNameEdit->setEnabled(true);
+    this->ui->MemberNameEdit->clear();
+
+    this->ui->LabelMarkerEdit->setEnabled(true);
+    this->ui->LabelMarkerEdit->clear();
+
+    this->ui->IssueDescEdit->clear();
+    this->ui->IssueNumberEdit->clear();
+
+    this->IssueList.clear();
+}
+
+void MainForm::on_ModuleGroupEdit_returnPressed()
+{
+    this->ui->ConvertResultEdit->clear();
+
+    if (this->ui->ModuleGroupEdit->text().isEmpty()){
+        int result = QMessageBox::warning(this, "Will not Create Label!", "Will Not Create the Label", QMessageBox::Ok, QMessageBox::Cancel);
+        if (result == QMessageBox::Ok){
+            this->ui->IssueNumberEdit->setFocus();
+
+            this->ui->ModuleGroupEdit->setEnabled(false);
+            this->ui->MemberNameEdit->setEnabled(false);
+            this->ui->LabelMarkerEdit->setEnabled(false);
+        }
+        else{
             return ;
         }
     }
-
-    this->ui->FormatMessage->append(Head_Str);
-<<<<<<< HEAD
-
-    QString TempStr;
-    QString IssueNumber;
-    QString IssueDesc;
-    QTableWidgetItem *ColumnFirst;
-    QTableWidgetItem *ColumnSecond;
-
-    for (int LoopFlag = 0; LoopFlag < CurrentRow; LoopFlag++)
-    {
-        TempStr = IssueStr;
-
-        ColumnFirst = this->ui->tableWidget->item(LoopFlag, 0);
-        ColumnSecond = this->ui->tableWidget->item(LoopFlag, 1);
-
-        if (ColumnFirst){
-            IssueNumber = ColumnFirst->text();
-        }else{
-            IssueNumber = "";
-        }
-
-=======
-
-    QString TempStr;
-    QString IssueNumber;
-    QString IssueDesc;
-    QTableWidgetItem *ColumnFirst;
-    QTableWidgetItem *ColumnSecond;
-
-    for (int LoopFlag = 0; LoopFlag < CurrentRow; LoopFlag++)
-    {
-        TempStr = IssueStr;
-
-        ColumnFirst = this->ui->tableWidget->item(LoopFlag, 0);
-        ColumnSecond = this->ui->tableWidget->item(LoopFlag, 1);
-
-        if (ColumnFirst){
-            IssueNumber = ColumnFirst->text();
-        }else{
-            IssueNumber = "";
-        }
-
->>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
-        if (ColumnSecond){
-            IssueDesc = ColumnSecond->text();
-        }else{
-            IssueDesc = "";
-        }
-
-        TempStr += ("EIP:" + IssueNumber + "    " + IssueDesc);
-        this->ui->FormatMessage->append(TempStr);
+    else{
+        this->ui->MemberNameEdit->setFocus();
+        this->NoLabel = false;
     }
-
-    if (CreateLabel){
-        QRadioButton *Place = qobject_cast<QRadioButton *>(PlaceSelect);
-        QRadioButton *Member = qobject_cast<QRadioButton *>(MemberSelect);
-
-        QString PlaceName = Place->objectName();
-        QString MemberName = Member->objectName();
-        QString CurrentTime = QDateTime::currentDateTime().toString("yyyyMMdd");
-
-        if (PlaceName == "User")
-            LabelStr += this->ui->UserDefineEdit->text();
-        else
-            LabelStr += PlaceName;
-
-        LabelStr += ("_D" + CurrentTime + "_" + MemberName);
-
-        LabelStr += ("_" + this->ui->LabelMarkerEdit->text());
-
-        this->ui->FormatMessage->append(LabelStr);
-    }
-
-    File_Str += (this->ui->FileDescEdit->text());
-
-    this->ui->FormatMessage->append(File_Str);
-
-    this->ui->tableWidget->clear();
-    this->ui->tableWidget->setRowCount(0);
-    this->ui->UserDefineEdit->clear();
-    this->ui->FileDescEdit->clear();
-    this->ui->LabelMarkerEdit->clear();
-
-    this->ui->FormatMessage->selectAll();
-    this->ui->FormatMessage->copy();
-
-    this->ui->FormatMessage->append("**************************************************");
-    this->ui->FormatMessage->append("The Commit Message has been copied to clipboard");
-    this->ui->FormatMessage->append("Just use Crtl+V to paste the Commit Message to Git");
-    this->ui->FormatMessage->append("**************************************************");
 }
 
-void MainForm::on_checkBox_stateChanged(int arg1)
-<<<<<<< HEAD
+void MainForm::on_MemberNameEdit_returnPressed()
 {
-    if (this->ui->checkBox->checkState() == Qt::Checked){
-        this->ui->CreateLabel->setEnabled(true);
+    if (this->ui->MemberNameEdit->text().isEmpty()){
+        int result = QMessageBox::warning(this, "Will not Create Label!", "Will Not Create the Label", QMessageBox::Ok, QMessageBox::Cancel);
+        if (result == QMessageBox::Ok){
+            this->ui->IssueNumberEdit->setFocus();
+
+            this->ui->ModuleGroupEdit->setEnabled(false);
+            this->ui->MemberNameEdit->setEnabled(false);
+            this->ui->LabelMarkerEdit->setEnabled(false);
+        }
+        else{
+            return ;
+        }
     }
     else{
-        this->ui->CreateLabel->setEnabled(false);
+        this->ui->LabelMarkerEdit->setFocus();
+        this->NoLabel = false;
     }
 }
 
-
-
-void MainForm::on_DescEdit_returnPressed()
+void MainForm::on_LabelMarkerEdit_returnPressed()
 {
-    int CurrentRowCount = this->ui->tableWidget->rowCount();
+    if (this->ui->LabelMarkerEdit->text().isEmpty()){
+        int result = QMessageBox::warning(this, "Will not Create Label!", "Will Not Create the Label", QMessageBox::Ok, QMessageBox::Cancel);
+        if (result == QMessageBox::Ok){
+            this->ui->IssueNumberEdit->setFocus();
 
-    QTableWidgetItem *IssueNumber = new QTableWidgetItem(this->ui->NumberEdit->text());
-    QTableWidgetItem *IssueDesc = new QTableWidgetItem(this->ui->DescEdit->text());
-
-    this->ui->tableWidget->setRowCount(this->ui->tableWidget->rowCount()+1);
-
-    this->ui->tableWidget->setItem(CurrentRowCount, 0, IssueNumber);
-    this->ui->tableWidget->setItem(CurrentRowCount, 1, IssueDesc);
-
-    this->ui->NumberEdit->clear();
-    this->ui->DescEdit->clear();
-    this->ui->NumberEdit->setFocus();
-}
-
-void MainForm::on_DeleteButton_clicked()
-{
-=======
-{
-    if (this->ui->checkBox->checkState() == Qt::Checked){
-        this->ui->CreateLabel->setEnabled(true);
+            this->ui->ModuleGroupEdit->setEnabled(false);
+            this->ui->MemberNameEdit->setEnabled(false);
+            this->ui->LabelMarkerEdit->setEnabled(false);
+        }
+        else{
+            return ;
+        }
     }
     else{
-        this->ui->CreateLabel->setEnabled(false);
+        this->ui->IssueNumberEdit->setFocus();
+        this->NoLabel = false;
     }
 }
 
-
-
-void MainForm::on_DescEdit_returnPressed()
+void MainForm::on_IssueDescEdit_editingFinished()
 {
-    int CurrentRowCount = this->ui->tableWidget->rowCount();
+    if (!this->ui->ConvertResultEdit->hasFocus()){
+        return ;
+    }
+    else{
+        QString IssueStr = "     Issue  : EIP:";
+        QString IssueNumber = this->ui->IssueNumberEdit->text().trimmed();
+        QString IssueDesc = this->ui->IssueDescEdit->text().trimmed();
+        QString TempStr = "";
 
-    QTableWidgetItem *IssueNumber = new QTableWidgetItem(this->ui->NumberEdit->text());
-    QTableWidgetItem *IssueDesc = new QTableWidgetItem(this->ui->DescEdit->text());
+        if (IssueDesc.isEmpty()){
+            QMessageBox::warning(this, "Add Issue Fail!", "The Issue Description is Empty!");
+            return ;
+        }
 
-    this->ui->tableWidget->setRowCount(this->ui->tableWidget->rowCount()+1);
+        if (IssueNumber.isEmpty()){
+            TempStr = (IssueStr + IssueDesc);
+        }
+        else{
+            TempStr = (IssueStr + IssueNumber + "    " + IssueDesc);
+        }
 
-    this->ui->tableWidget->setItem(CurrentRowCount, 0, IssueNumber);
-    this->ui->tableWidget->setItem(CurrentRowCount, 1, IssueDesc);
+        this->IssueList << TempStr;
+        this->ui->ConvertResultEdit->append(TempStr.trimmed());
 
-    this->ui->NumberEdit->clear();
-    this->ui->DescEdit->clear();
-    this->ui->NumberEdit->setFocus();
-}
-
-void MainForm::on_DeleteButton_clicked()
-{
->>>>>>> 6f039d58c335fbb9afe5f2de6252e01731a95f98
-    int RowIndex = this->ui->tableWidget->currentRow();
-
-    if (RowIndex != -1){
-        this->ui->tableWidget->removeRow(RowIndex);
+        this->ui->IssueNumberEdit->clear();
+        this->ui->IssueDescEdit->clear();
+        this->ui->IssueNumberEdit->setFocus();
     }
 }

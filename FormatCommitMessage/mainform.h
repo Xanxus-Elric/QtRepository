@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QIcon>
+#include <QStringList>
 
 namespace Ui {
 class MainForm;
@@ -18,18 +19,26 @@ public:
 
 private slots:
 
-    void on_ConvertButton_clicked();
+    void on_IssueNumberEdit_returnPressed();
 
-    void on_checkBox_stateChanged(int arg1);
+    void on_IssueDescEdit_returnPressed();
 
-    void on_DescEdit_returnPressed();
+    void on_ModuleGroupEdit_returnPressed();
 
-    void on_DeleteButton_clicked();
+    void on_MemberNameEdit_returnPressed();
+
+    void on_LabelMarkerEdit_returnPressed();
+
+    void on_IssueDescEdit_editingFinished();
 
 private:
     Ui::MainForm *ui;
 
     QIcon MainIcon;
+
+    QStringList IssueList;
+
+    bool NoLabel;
 
 };
 
